@@ -1,5 +1,7 @@
 ﻿@page "/counter"
+@using TechTrendsAppv1.BLL.RolesServices
 @rendermode InteractiveServer
+@inject IRolesService RolesService
 
 <PageTitle>Counter</PageTitle>
 
@@ -11,6 +13,11 @@
 
 @code {
     private int currentCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var roles = await RolesService.GetRolesAsync();
+    }
 
     private void IncrementCount()
     {

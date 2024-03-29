@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using TechTrendsAppv1.BLL.Roles;
+using TechTrendsAppv1.BLL.RolesServices;
 using TechTrendsAppv1.Components;
 using TechTrendsAppv1.DAL;
 
@@ -13,6 +15,8 @@ builder.Services.AddDbContext<Contexto>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 }
 );
+
+builder.Services.AddScoped<IRolesService, RolesBLL>();
 
 var app = builder.Build();
 
