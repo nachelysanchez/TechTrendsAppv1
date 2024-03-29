@@ -1,10 +1,18 @@
+using Microsoft.EntityFrameworkCore;
 using TechTrendsAppv1.Components;
+using TechTrendsAppv1.DAL;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDbContext<Contexto>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+}
+);
 
 var app = builder.Build();
 
