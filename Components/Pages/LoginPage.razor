@@ -1,0 +1,61 @@
+﻿@page "/Login"
+@layout Login
+
+@using TechTrendsAppv1.Extensiones
+@using TechTrendsAppv1.Modelos
+@inject NavigationManager navManager
+
+<div class="container">
+    <div class="container_content">
+        <h2>TechTrends</h2>
+        <h3>¡Bienvenido de nuevo!</h3>
+        <h1>Log In</h1>
+
+        <form>
+            <label>Email</label>
+            <div class="input_row">
+                <input type="email" placeholder="Ingresa tu e-mail"/>
+            </div>
+            <div class="input_header">
+                <label>Contrase&ntilde;a</label>
+                <a href="#">¿Olvidaste tu contrase&ntilde;a?</a>
+            </div>
+            <div class="input_row">
+                <input type="password" id="password" placeholder="Contraseña"/>
+                <span id="password-eye">
+                    <i class="material-symbols-outlined">
+                        visibility_off
+                    </i>
+                </span>
+            </div>
+            <button>Ingresar</button>
+        </form>
+
+        <h6>O contin&uacute;a con</h6>
+        <div class="logins">
+            <a href="#"><img src="/images/LogoGoogle.png" alt="google"/></a>
+            <a href="#"><img src="/images/LogoFacebook.png" alt="facebook"/></a>
+        </div>
+        <p>¿No tienes una cuenta todav&iacute;a? <a href="#">¡Registrate gratis!</a></p>
+
+    </div>
+    <script src="main.js"></script>
+</div>
+
+@code {
+    private LoginDto login = new();
+
+    private async Task LoginAction()
+    {
+         //var loginUser = await UsuariosService.Login(login.Correo, login.Clave);
+        // var sesion = new SesionDto(loginUser);
+
+        // if (loginUser != null)
+        // {
+        //     var autenticacionExt = (AutenticacionExtension)autenticacionProvider;
+        //     await autenticacionExt.ActualizarEstadoAutenticacion(sesion);
+
+        //     navManager.NavigateTo("/Home");
+        // }
+    }
+}
