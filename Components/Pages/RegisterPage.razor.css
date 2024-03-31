@@ -1,5 +1,4 @@
-﻿
-body{
+﻿body{
     font-family: "Poppins", sans-serif;
 }
 
@@ -101,10 +100,8 @@ body{
     font-size: 1rem;
     color: white;
     background-color: #0094ff;
-    border-radius: 5rem;
-    cursor: pointer;
-    display: grid;
-    gap: 5px;
+    border-radius:5rem;
+    cursor:pointer;
 }
 
 .container_content h6{

@@ -2,6 +2,7 @@
 @using TechTrendsAppv1.BLL.RolesServices
 @rendermode InteractiveServer
 @inject IRolesService RolesService
+@inject NavigationManager nav
 
 <PageTitle>Counter</PageTitle>
 
@@ -10,13 +11,19 @@
 <p role="status">Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="Hola">Click me</button>
 
 @code {
     private int currentCount = 0;
 
     protected override async Task OnInitializedAsync()
     {
-        var roles = await RolesService.GetRolesAsync();
+    }
+
+    private void Hola()
+    {
+        var roles = RolesService.GetRolesAsync();
+        nav.NavigateTo("/Login");
     }
 
     private void IncrementCount()

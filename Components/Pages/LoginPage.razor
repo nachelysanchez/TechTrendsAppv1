@@ -1,9 +1,11 @@
-﻿@page "/Login"
-@layout Login
+﻿@layout Login
+@page "/Login"
 
-@using TechTrendsAppv1.Extensiones
 @using TechTrendsAppv1.Modelos
 @inject NavigationManager navManager
+@using TechTrendsAppv1.BLL.UsuariosServices
+@inject IUsuariosService userService
+@rendermode RenderMode.InteractiveServer
 
 <div class="container">
     <div class="container_content">
@@ -14,22 +16,33 @@
         <form>
             <label>Email</label>
             <div class="input_row">
-                <input type="email" placeholder="Ingresa tu e-mail"/>
+                <input type="email" @bind-value="login.Correo" placeholder="Ingresa tu e-mail"/>
             </div>
             <div class="input_header">
                 <label>Contrase&ntilde;a</label>
                 <a href="#">¿Olvidaste tu contrase&ntilde;a?</a>
             </div>
             <div class="input_row">
-                <input type="password" id="password" placeholder="Contraseña"/>
-                <span id="password-eye">
+                <input type="@tipo" id="password" @bind-value="login.Clave" placeholder="Contraseña" />
+                <span id="password-eye" @onclick="TogglePasswordVisibility">
                     <i class="material-symbols-outlined">
-                        visibility_off
+                        @if(showPassword == false)
+                        {
+                            propiedad = "visibility_off";
+                            tipo = "text";
+                        }
+                        else
+                        {
+                            propiedad = "visibility";
+                            tipo = "password";
+                        }
+                        @propiedad;
                     </i>
                 </span>
             </div>
-            <button>Ingresar</button>
+            <label>@mensaje</label>
         </form>
+        <button @onclick="LoginAction">Ingresar</button>
 
         <h6>O contin&uacute;a con</h6>
         <div class="logins">
@@ -39,23 +52,29 @@
         <p>¿No tienes una cuenta todav&iacute;a? <a href="#">¡Registrate gratis!</a></p>
 
     </div>
-    <script src="main.js"></script>
 </div>
 
 @code {
     private LoginDto login = new();
+    private Usuarios user = new();
+    private string mensaje = string.Empty, propiedad = string.Empty, tipo = "password";
+    private bool showPassword = false;
 
     private async Task LoginAction()
     {
-         //var loginUser = await UsuariosService.Login(login.Correo, login.Clave);
-        // var sesion = new SesionDto(loginUser);
-
-        // if (loginUser != null)
-        // {
-        //     var autenticacionExt = (AutenticacionExtension)autenticacionProvider;
-        //     await autenticacionExt.ActualizarEstadoAutenticacion(sesion);
-
-        //     navManager.NavigateTo("/Home");
-        // }
+        user = await userService.Login(login.Correo,login.Clave);
+        if (user != null)
+        {
+            navManager.NavigateTo("/");
+        }
+        else
+        {
+            this.OnInitialized();
+            mensaje = "Correo o contraseña incorrecta";
+        }
+    }
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
     }
 }

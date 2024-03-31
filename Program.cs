@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using TechTrendsAppv1.BLL.Roles;
 using TechTrendsAppv1.BLL.RolesServices;
+using TechTrendsAppv1.BLL.UsuariosServices;
 using TechTrendsAppv1.Components;
 using TechTrendsAppv1.DAL;
+using TechTrendsAppv1.Sesion;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,8 +17,9 @@ builder.Services.AddDbContext<Contexto>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 }
 );
-
+builder.Services.AddScoped<SesionDto>();
 builder.Services.AddScoped<IRolesService, RolesBLL>();
+builder.Services.AddScoped<IUsuariosService, UsuariosBLL>();
 
 var app = builder.Build();
 
@@ -35,5 +38,6 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
 
 app.Run();
