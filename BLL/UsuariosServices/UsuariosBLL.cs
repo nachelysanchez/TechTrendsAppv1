@@ -59,5 +59,10 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
                 throw;
             }
         }
+
+        public void CerrarSesion()
+        {
+            sesion.SetUsuarioLog(0);
+        }
     }
 }

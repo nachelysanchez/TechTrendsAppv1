@@ -7,5 +7,6 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
         public Task<Usuarios> Login(string email, string clave);
         public Task<Usuarios> GetUsuario(int idUsuario);
         public Task<Usuarios> GetUsuarioLogueado();
+        public void CerrarSesion();
     }
 }
