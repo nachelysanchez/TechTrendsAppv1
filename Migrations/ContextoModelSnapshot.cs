@@ -346,15 +346,13 @@ namespace TechTrendsAppv1.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TechTrendsAppv1.Modelos.Roles", "Rol")
-                        .WithMany()
+                    b.HasOne("TechTrendsAppv1.Modelos.Roles", null)
+                        .WithMany("Permisos")
                         .HasForeignKey("IdRol")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Permiso");
-
-                    b.Navigation("Rol");
                 });
 
             modelBuilder.Entity("TechTrendsAppv1.Modelos.Publicaciones", b =>
@@ -396,6 +394,11 @@ namespace TechTrendsAppv1.Migrations
                         .IsRequired();
 
                     b.Navigation("rol");
+                });
+
+            modelBuilder.Entity("TechTrendsAppv1.Modelos.Roles", b =>
+                {
+                    b.Navigation("Permisos");
                 });
 #pragma warning restore 612, 618
         }

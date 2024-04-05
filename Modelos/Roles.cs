@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TechTrendsAppv1.Modelos
 {
@@ -7,5 +8,8 @@ namespace TechTrendsAppv1.Modelos
         [Key]
         public int IdRol { get; set; }
         public string Nombre { get; set; } = string.Empty;
+
+        [ForeignKey("IdRol")]
+        public List<PermisosRoles> Permisos { get; set; } = new List<PermisosRoles>();
     }
 }

@@ -8,8 +8,6 @@ namespace TechTrendsAppv1.Modelos
         [Key]
         public int IdPermisoRol { get; set; }
         public int IdRol { get; set; }
-        [ForeignKey("IdRol")]
-        public Roles Rol { get; set; } = new();
 
         public int IdPermiso { get; set; }
         [ForeignKey("IdPermiso")]

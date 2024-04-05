@@ -104,6 +104,10 @@ namespace TechTrendsAppv1.BLL.Roles
             try
             {
                 await contexto.Roles.AddAsync(rol);
+                foreach (var item in rol.Permisos)
+                {
+                    contexto.Entry(item).State = EntityState.Added;
+                }
                 paso = await contexto.SaveChangesAsync() > 0;
             }
             catch (Exception)
@@ -121,6 +125,18 @@ namespace TechTrendsAppv1.BLL.Roles
             bool paso = false;
             try
             {
+                var rolAnterior = await contexto.Roles.Where(x => x.IdRol == rol.IdRol)
+                    .Include(x => x.Permisos)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync();
+
+                await contexto.Database.ExecuteSqlAsync($"DELETE FROM PermisosRoles WHERE IdRol = {rol.IdRol}");
+
+                foreach (var item in rol.Permisos)
+                {
+                    contexto.Entry(item).State = EntityState.Added;
+                }
+
                 contexto.Entry(rol).State = EntityState.Modified;
                 paso = await contexto.SaveChangesAsync() > 0;
             }
@@ -156,6 +172,25 @@ namespace TechTrendsAppv1.BLL.Roles
 
             }
             return paso;
+        }
+
+        public async Task<List<PermisosRoles>> GetPermisosRol(int idRol)
+        {
+            List<PermisosRoles> permisos = new List<PermisosRoles>();
+            try
+            {
+                //permisos = await contexto.PermisosRoles.Where(x => x.IdRol == idRol).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+            return permisos;
         }
     }
 }

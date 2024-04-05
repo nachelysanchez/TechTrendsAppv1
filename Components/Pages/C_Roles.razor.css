@@ -1,0 +1,27 @@
+﻿
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+.card-body {
+    width: 100%;
+    padding-block: 2rem;
+    max-width: 700px;
+}
+.card-body form {
+    display: grid;
+    gap: 5px;
+}
+
+    .card-body button {
+        border: none;
+        font-size: 1rem;
+        color: white;
+        background-color: #0094ff;
+        border-radius: 5rem;
+        cursor: pointer;
+        gap: 5px;
+    }
+.card-body table{
+    border-collapse: collapse;
+}

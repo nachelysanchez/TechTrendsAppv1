@@ -9,7 +9,6 @@ namespace TechTrendsAppv1.DAL
         public DbSet<Comentarios> Comentarios { get; set; }
         public DbSet<CalificacionPublicaciones> CalificacionPublicaciones { get; set; }
         public DbSet<Permisos> Permisos { get; set; }
-        public DbSet<PermisosRoles> PermisosRoles { get; set; }
         public DbSet<Etiquetas> Etiquetas { get; set; }
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
