@@ -12,5 +12,6 @@ namespace TechTrendsAppv1.Modelos
         public int IdPermiso { get; set; }
         [ForeignKey("IdPermiso")]
         public Permisos Permiso { get; set; } = new();
+        public bool Activo { get; set; }
     }
 }

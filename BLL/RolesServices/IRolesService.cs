@@ -11,7 +11,9 @@ namespace TechTrendsAppv1.BLL.RolesServices
         public Task<Modelos.Roles> GetRolAsync(int idRol);
         public Task<bool> Guardar(Modelos.Roles rol);
         public Task<bool> Eliminar(int id);
-        public Task<List<PermisosRoles>> GetPermisosRol(int idRol);
+        public Task<List<Modelos.Roles>> GetPermisosRol(int idRol);
+        public Task<List<Permisos>> GetPermisos();
+
 
     }
 }

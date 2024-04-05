@@ -1,0 +1,91 @@
+﻿@page "/rRoles"
+@page "/rRoles/{parametro:int}"
+@using TechTrendsAppv1.BLL.RolesServices
+@using TechTrendsAppv1.Modelos
+@inject IRolesService rolesService
+
+<EditForm Model="rol">
+    <DataAnnotationsValidator />
+
+    <div class="card">
+        <div class="card-header">
+            <h3>Registro de Roles</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="form-row align-items-center">
+                    <div class="col" style="margin-bottom:2rem;">
+                        <div class="form-group">
+                            <label>Rol Id</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="rol.IdRol" class="form-control col-4" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nombre del rol</label>
+                    <InputText @bind-Value="rol.Nombre" class="form-control" />
+                    <ValidationMessage For="@(() => rol.Nombre)" />
+                </div>
+                <div class="card mt-4" >
+
+                    <div class="form-group d-inline-flex">
+                        <table class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr class="table-info">
+                                    <th>Permiso</th>
+                                    <th>Activo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in rol.Permisos)
+                                {
+                                    <tr>
+                                        <td>@item.Permiso.Descripcion</td>
+                                        <td><input type="checkbox" class="form-check" @bind-value="@item.Activo" /></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="form-group text-center" display: inline-block>
+                <button type="button" class="btn btn-lg btn-primary">Nuevo</button>
+                <button type="submit" class="btn btn-lg btn-success">Guardar</button>
+                <button type="button" class="btn btn-lg btn-danger">Eliminar</button>
+            </div>
+
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int parametro { get; set; }
+    public Roles rol { get; set; }
+    public List<Permisos> permisos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        rol = new Roles();
+        permisos = await rolesService.GetPermisos();
+        foreach (var item in permisos)
+        {
+            rol.Permisos.Add(
+                new PermisosRoles
+                    {
+                        IdPermiso = item.IdPermiso,
+                        Permiso = item,
+                        Activo = false
+                    }
+            );
+
+        }
+        base.OnInitializedAsync();
+    }
+}

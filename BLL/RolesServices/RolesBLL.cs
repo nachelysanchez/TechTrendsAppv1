@@ -174,16 +174,36 @@ namespace TechTrendsAppv1.BLL.Roles
             return paso;
         }
 
-        public async Task<List<PermisosRoles>> GetPermisosRol(int idRol)
+        public async Task<List<Modelos.Roles>> GetPermisosRol(int idRol)
         {
-            List<PermisosRoles> permisos = new List<PermisosRoles>();
+            List<Modelos.Roles> permisos = new List<Modelos.Roles>();
             try
             {
-                //permisos = await contexto.PermisosRoles.Where(x => x.IdRol == idRol).ToListAsync();
+                permisos = await contexto.Roles.Where(x => x.IdRol == idRol)
+                    .Include(x => x.Permisos)
+                    .ThenInclude(x => x.Permiso)
+                    .ToListAsync();
             }
             catch (Exception)
             {
+                throw;
+            }
+            finally
+            {
+                contexto.Dispose();
+            }
+            return permisos;
+        }
 
+        public async Task<List<Permisos>> GetPermisos()
+        {
+            List<Permisos> permisos = new List<Permisos>();
+            try
+            {
+                permisos =await contexto.Permisos.ToListAsync();
+            }
+            catch (Exception)
+            {
                 throw;
             }
             finally
