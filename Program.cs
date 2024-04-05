@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
 using TechTrendsAppv1.BLL.Roles;
 using TechTrendsAppv1.BLL.RolesServices;
@@ -17,6 +18,10 @@ builder.Services.AddDbContext<Contexto>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 }
 );
+
+/* Blazored Toast */
+builder.Services.AddBlazoredToast();
+
 builder.Services.AddScoped<SesionDto>();
 builder.Services.AddScoped<IRolesService, RolesBLL>();
 builder.Services.AddScoped<IUsuariosService, UsuariosBLL>();

@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazored.Toast.Configuration
+@inherits LayoutComponentBase
 
 <div class="page">
     <div class="sidebar">
@@ -17,8 +18,18 @@
     </main>
 </div>
 
-<div id="blazor-error-ui">
+
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="5"
+                IconType="IconType.Material"
+                ErrorIcon="❌"
+                InfoIcon="❕"
+                SuccessIcon="✔️"
+                ShowProgressBar="@true"
+                ShowCloseButton="@true">
+</BlazoredToasts>
+@* <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
-</div>
+</div> *@
