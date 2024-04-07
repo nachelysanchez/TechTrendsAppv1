@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
 using TechTrendsAppv1.DAL;
 using TechTrendsAppv1.Modelos;
 using TechTrendsAppv1.Sesion;
@@ -63,6 +65,37 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
         public void CerrarSesion()
         {
             sesion.SetUsuarioLog(0);
+        }
+
+        public async Task<List<Usuarios>> GetUsuarios()
+        {
+            List<Usuarios> usuarios = new List<Usuarios>();
+            try
+            {
+                usuarios = await contexto.Usuarios.Include(x => x.rol).AsNoTracking().ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return usuarios;
+        }
+
+        public async Task<List<Usuarios>> GetListAsync(Expression<Func<Usuarios, bool>> criterio)
+        {
+            List<Usuarios> lista = new List<Usuarios>();
+
+            try
+            {
+                lista = await contexto.Usuarios.Where(criterio).Include(x => x.rol).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return lista;
         }
     }
 }

@@ -3,8 +3,10 @@
 @using TechTrendsAppv1.BLL.RolesServices
 @using TechTrendsAppv1.Modelos
 @inject IRolesService rolesService
+@inject IToastService toast
+@rendermode InteractiveServer
 
-<EditForm Model="rol">
+<EditForm Model="rol" OnValidSubmit="Guardar">
     <DataAnnotationsValidator />
 
     <div class="card">
@@ -55,7 +57,7 @@
         </div>
         <div class="card-footer">
             <div class="form-group text-center" display: inline-block>
-                <button type="button" class="btn btn-lg btn-primary">Nuevo</button>
+                <button @onclick="Nuevo" type="button" class="btn btn-lg btn-primary">Nuevo</button>
                 <button type="submit" class="btn btn-lg btn-success">Guardar</button>
                 <button type="button" class="btn btn-lg btn-danger">Eliminar</button>
             </div>
@@ -67,25 +69,86 @@
 @code {
     [Parameter]
     public int parametro { get; set; }
-    public Roles rol { get; set; }
-    public List<Permisos> permisos { get; set; }
+    public Roles rol { get; set; } = new Roles();
+    public List<PermisosRoles> permisos { get; set; } = new List<PermisosRoles>();
 
     protected override async Task OnInitializedAsync()
     {
-        rol = new Roles();
-        permisos = await rolesService.GetPermisos();
-        foreach (var item in permisos)
+        await base.OnInitializedAsync();
+        permisos = await rolesService.GetPermisosRoles();
+        if(parametro > 0)
         {
-            rol.Permisos.Add(
-                new PermisosRoles
-                    {
-                        IdPermiso = item.IdPermiso,
-                        Permiso = item,
-                        Activo = false
-                    }
-            );
-
+            await Buscar(parametro);
         }
-        base.OnInitializedAsync();
+        else
+        {
+            await Nuevo();
+        }
+
+    }
+
+    private async Task Nuevo()
+    {
+        rol = new Roles();
+        rol.Permisos = permisos;
+    }
+
+    private async void Guardar()
+    {
+        var guardado = await rolesService.Guardar(rol);
+
+        if (guardado)
+        {
+            await Nuevo();
+            toast.ShowInfo("El rol se guardo correctamente");
+        }
+        else
+        {
+            toast.ShowWarning("El rol no se guardo");
+        }
+    }
+
+    private async Task Buscar(int id)
+    {
+        if (id > 0)
+        {
+            var encontrado = await rolesService.GetRolAsync(id);
+            if (encontrado != null)
+            {
+                this.rol = encontrado;
+                if(rol.Permisos.Count == 0)
+                {
+                    rol.Permisos = permisos;
+                }
+            }
+            else
+            {
+                await Nuevo();
+                toast.ShowWarning($"No se ha encontrado el rol con el id ingresado");
+            }
+        }
+    }
+
+    private async Task LlenarPermisos()
+    {
+        
+    }
+
+    public async Task Eliminar()
+    {
+        bool eliminado;
+
+        eliminado = await rolesService.Eliminar(rol.IdRol);
+
+        if (eliminado)
+        {
+            await Nuevo();
+            toast.ShowInfo("El rol se elimino correctamente");
+        }
+        else
+        {
+            toast.ShowWarning("El rol no se elimino");
+        }
+
     }
 }

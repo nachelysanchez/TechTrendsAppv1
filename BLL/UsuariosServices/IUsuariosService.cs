@@ -1,4 +1,5 @@
-﻿using TechTrendsAppv1.Modelos;
+﻿using System.Linq.Expressions;
+using TechTrendsAppv1.Modelos;
 
 namespace TechTrendsAppv1.BLL.UsuariosServices
 {
@@ -8,5 +9,8 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
         public Task<Usuarios> GetUsuario(int idUsuario);
         public Task<Usuarios> GetUsuarioLogueado();
         public void CerrarSesion();
+
+        public Task<List<Usuarios>> GetUsuarios();
+        public Task<List<Usuarios>> GetListAsync(Expression<Func<Usuarios, bool>> criterio);
     }
 }

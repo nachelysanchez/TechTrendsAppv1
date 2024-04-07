@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TechTrendsAppv1.BLL.RolesServices;
+
 
 namespace TechTrendsAppv1.Modelos
 {

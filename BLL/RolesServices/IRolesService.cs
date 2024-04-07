@@ -13,7 +13,6 @@ namespace TechTrendsAppv1.BLL.RolesServices
         public Task<bool> Eliminar(int id);
         public Task<List<Modelos.Roles>> GetPermisosRol(int idRol);
         public Task<List<Permisos>> GetPermisos();
-
-
+        public Task<List<PermisosRoles>> GetPermisosRoles();
     }
 }

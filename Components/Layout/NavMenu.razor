@@ -1,4 +1,7 @@
-﻿<div class="top-row navbar navbar-dark">
+﻿@inject IUsuariosService usuarioService
+@using TechTrendsAppv1.Modelos
+
+<div class="top-row navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" style="margin-left: auto; margin-right: auto;" href="">
             <img src="/images/LogoTrendTech.jpg" class="m-1" style="border-radius:50%;" width="70" height="70"/>
@@ -14,33 +17,67 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+        @if (Usuario != null)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/Home" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </NavLink>
+            </div>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="counter">
+                    <span class="material-symbols-outlined m-1">
+                        file_copy
+                    </span> Contenido
+                </NavLink>
+            </div>
+            <hr class="dashed" />
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
+            <div id="User" class="nav-item px-3" style="">
+                <NavLink class="nav-link" href="/cUsuarios">
+                    <span class="material-symbols-outlined m-1" aria-hidden="true">
+                        person
+                    </span> Usuario
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </NavLink>
+            </div>
 
-        <hr class="dashed"/>
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="counter">
+                    <span class="material-symbols-outlined m-1">
+                        file_copy
+                    </span> Contenido
+                </NavLink>
+            </div>
+            <hr class="dashed" />
 
-        <div id="User" class="nav-item px-3" style="">
-            <NavLink class="nav-link" href="/login">
-                <span class="material-symbols-outlined m-1" aria-hidden="true">
-                    person
-                </span> Usuario
-            </NavLink>
-        </div>
+            <div id="User" class="nav-item px-3" style="">
+                <NavLink class="nav-link" href="/login">
+                    <span class="material-symbols-outlined m-1" aria-hidden="true">
+                        person
+                    </span> Iniciar sesi&oacute;n
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
 
+@code{
+    public Usuarios Usuario { get; set; } = null;
+    private string mensaje = "No puedes estar aqui";
+    
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Usuario = await usuarioService.GetUsuarioLogueado();
+    }
+}

@@ -27,10 +27,6 @@ namespace TechTrendsAppv1.BLL.Roles
             {
                 throw;
             }
-            finally
-            {
-                contexto.Dispose();
-            }
             return encontrado;
         }
 
@@ -64,10 +60,6 @@ namespace TechTrendsAppv1.BLL.Roles
 
                 throw;
             }
-            finally
-            {
-                contexto.Dispose();
-            }
             return lista;
         }
         async Task<Modelos.Roles> IRolesService.GetRolAsync(int idRol)
@@ -75,15 +67,16 @@ namespace TechTrendsAppv1.BLL.Roles
             Modelos.Roles rol = new();
             try
             {
-                rol = await contexto.Roles.FindAsync(idRol);
+                //TODO: Revisar porque explota y la tarea se cancela
+                rol = await contexto.Roles.Where(x => x.IdRol == idRol)
+                    .Include(x => x.Permisos)
+                    .ThenInclude(x => x.Permiso)
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync();
             }
             catch (Exception)
             {
                 throw;
-            }
-            finally
-            {
-                contexto.Dispose();
             }
             return rol;
         }
@@ -114,10 +107,6 @@ namespace TechTrendsAppv1.BLL.Roles
             {
                 throw;
             }
-            finally
-            {
-                contexto.Dispose();
-            }
             return paso;
         }
         private async Task<bool> Modificar(Modelos.Roles rol)
@@ -144,10 +133,6 @@ namespace TechTrendsAppv1.BLL.Roles
             {
                 throw;
             }
-            finally
-            {
-                contexto.Dispose();
-            }
             return paso;
         }
         async Task<bool> IRolesService.Eliminar(int id)
@@ -166,11 +151,6 @@ namespace TechTrendsAppv1.BLL.Roles
             {
                 throw;
             }
-            finally
-            {
-                contexto.Dispose();
-
-            }
             return paso;
         }
 
@@ -188,10 +168,6 @@ namespace TechTrendsAppv1.BLL.Roles
             {
                 throw;
             }
-            finally
-            {
-                contexto.Dispose();
-            }
             return permisos;
         }
 
@@ -200,17 +176,40 @@ namespace TechTrendsAppv1.BLL.Roles
             List<Permisos> permisos = new List<Permisos>();
             try
             {
-                permisos =await contexto.Permisos.ToListAsync();
+
+                permisos =await contexto.Permisos.AsNoTracking().ToListAsync();
             }
             catch (Exception)
             {
                 throw;
             }
-            finally
-            {
-                contexto.Dispose();
-            }
             return permisos;
+        }
+
+        public async Task<List<PermisosRoles>> GetPermisosRoles()
+        {
+            List<PermisosRoles> permisosRoles = new List<PermisosRoles>();
+            List<Permisos> permisos = new List<Permisos>();
+            try
+            {
+                permisos = await GetPermisos();
+                foreach (var item in permisos)
+                {
+
+                    permisosRoles.Add(new PermisosRoles
+                    {
+                        IdPermiso = item.IdPermiso,
+                        Permiso = item,
+                        Activo = false
+                    });
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return permisosRoles;
         }
     }
 }

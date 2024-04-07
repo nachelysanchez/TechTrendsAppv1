@@ -1,0 +1,98 @@
+﻿@page "/cUsuarios"
+@using TechTrendsAppv1.Modelos
+@using TechTrendsAppv1.BLL.UsuariosServices
+@inject IUsuariosService usuarioService
+@rendermode InteractiveServer
+
+<EditForm Model="lista">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header">
+            <h3>Consulta de Tareas</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="input-group d-flex align-items-end">
+                    <select class="form-control col-2" @bind="Filtro">
+                        <option value="0">Todos</option>
+                        <option value="1">Id</option>
+                        <option value="2">Nombre</option>
+                    </select>
+
+                    <div class="flex-fill mx-2">
+                        <label>Criterio</label>
+                        <input type="text" class="form-control" @bind="Criterio" />
+                    </div>
+
+                    <button type="button" class="btn btn-warning" @onclick="Buscar">
+                        <i class="oi oi-magnifying-glass mr-2" /> Buscar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr class="table-info">
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Acci&oacute;n</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.Nombre</td>
+                        <td>@item.Email</td>
+                        <td>@item.rol.Nombre</td>
+                        @* <td>
+                            <a class="btn btn-sm btn-outline-primary material-symbols-outlined" href="/rRoles/@item.IdRol">
+                                visibility
+                            </a>
+                        </td> *@
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</EditForm>
+
+
+@code {
+    public int Id { get; set; }
+    public string Filtro { get; set; }
+    public string Criterio { get; set; }
+    public List<Usuarios> lista { get; set; } = new List<Usuarios>();
+    private void EventVer(int idUsuario)
+    {
+        Id = idUsuario;
+    }
+
+    private async Task Buscar()
+    {
+        lista = new List<Usuarios>();
+
+        if (Criterio != null)
+        {
+            switch (Filtro)
+            {
+                case "0":
+                    lista = await usuarioService.GetUsuarios();
+                    break;
+                case "1":
+                    lista = await usuarioService.GetListAsync(t => t.IdUsuario == int.Parse(Criterio));
+                    break;
+
+                case "2":
+                    lista = await usuarioService.GetListAsync(t => t.Nombre.Contains(Criterio));
+                    break;
+            }
+        }
+        else
+        {
+            lista = await usuarioService.GetListAsync(x => true);
+        }
+    }
+}
