@@ -1,4 +1,5 @@
-﻿using TechTrendsAppv1.Modelos;
+﻿using System.Linq.Expressions;
+using TechTrendsAppv1.Modelos;
 
 namespace TechTrendsAppv1.BLL.PublicacionesServices
 {
@@ -8,5 +9,8 @@ namespace TechTrendsAppv1.BLL.PublicacionesServices
         public Task<bool> Guardar(Publicaciones publicacion);
         public Task<bool> Insertar(Publicaciones publicacion);
         public Task<bool> Modificar(Publicaciones publicacion);
+        public Task<List<Publicaciones>> GetPublicaciones();
+        public Task<List<Publicaciones>> GetListAsync(Expression<Func<Publicaciones, bool>> criterio);
+
     }
 }

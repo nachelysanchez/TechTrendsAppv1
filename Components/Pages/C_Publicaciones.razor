@@ -1,0 +1,16 @@
+﻿@page "/cPublicaciones"
+@using TechTrendsAppv1.BLL.PublicacionesServices
+@using TechTrendsAppv1.Modelos
+@inject IPublicacionesService publicacionService
+@rendermode InteractiveServer
+
+
+
+@code {
+    public int Id { get; set; }
+    public string Filtro { get; set; }
+    public string Criterio { get; set; }
+    public List<Publicaciones> lista { get; set; } = new List<Publicaciones>();
+
+
+}

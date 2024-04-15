@@ -1,4 +1,7 @@
-﻿using TechTrendsAppv1.DAL;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Linq.Expressions;
+using TechTrendsAppv1.DAL;
 using TechTrendsAppv1.Modelos;
 
 namespace TechTrendsAppv1.BLL.PublicacionesServices
@@ -25,6 +28,38 @@ namespace TechTrendsAppv1.BLL.PublicacionesServices
                 throw;
             }
             return encontrado;
+        }
+
+        public async Task<List<Publicaciones>> GetListAsync(Expression<Func<Publicaciones, bool>> criterio)
+        {
+            List<Publicaciones> lista = new List<Publicaciones>();
+
+            try
+            {
+                lista = contexto.Publicaciones.Where(criterio).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return lista;
+        }
+
+        public async Task<List<Publicaciones>> GetPublicaciones()
+        {
+            List<Publicaciones> lista = new List<Publicaciones>();
+
+            try
+            {
+                lista = await contexto.Publicaciones.ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return lista;
         }
 
         public async Task<bool> Guardar(Publicaciones publicacion)
@@ -54,9 +89,19 @@ namespace TechTrendsAppv1.BLL.PublicacionesServices
             return paso;
         }
 
-        public Task<bool> Modificar(Publicaciones publicacion)
+        public async Task<bool> Modificar(Publicaciones publicacion)
         {
-            throw new NotImplementedException();
+            bool paso = false;
+            try
+            {
+                contexto.Publicaciones.Update(publicacion);
+                paso = await contexto.SaveChangesAsync() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return paso;
         }
     }
 }
