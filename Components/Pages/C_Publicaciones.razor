@@ -4,7 +4,63 @@
 @inject IPublicacionesService publicacionService
 @rendermode InteractiveServer
 
+<EditForm Model="lista">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header">
+            <h3>Consulta de Publicaciones</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="input-group d-flex align-items-end">
+                    <select class="form-control col-2" @bind="Filtro">
+                        <option value="0">Todos</option>
+                        <option value="1">Id</option>
+                        <option value="2">T&iacute;tulo</option>
+                        <option value="3">Autor</option>
+                    </select>
 
+                    <div class="flex-fill mx-2">
+                        <label>Criterio</label>
+                        <input type="text" class="form-control" @bind="Criterio" />
+                    </div>
+
+                    <button type="button" class="btn btn-warning" @onclick="Buscar">
+                        <i class="oi oi-magnifying-glass mr-2" /> Buscar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr class="table-info">
+                    <th>Id</th>
+                    <th>T&iacute;tulo</th>
+                    <th>Fecha</th>
+                    <th>Autor</th>
+                    <th>Acci&oacute;n</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.IdPublicacion</td>
+                        <td>@item.Titulo</td>
+                        <td>@item.Fecha</td>
+                        <td>@item.Autor</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary material-symbols-outlined" href="/rPublicaciones/@item.IdPublicacion">
+                                visibility
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</EditForm>
 
 @code {
     public int Id { get; set; }
@@ -12,5 +68,31 @@
     public string Criterio { get; set; }
     public List<Publicaciones> lista { get; set; } = new List<Publicaciones>();
 
+    private async Task Buscar()
+    {
+        lista = new List<Publicaciones>();
 
+        if (Criterio != null)
+        {
+            switch (Filtro)
+            {
+                case "0":
+                    lista = await publicacionService.GetPublicaciones();
+                    break;
+                case "1":
+                    lista = await publicacionService.GetListAsync(x => x.IdPublicacion == int.Parse(Criterio));
+                    break;
+                case "2":
+                    lista = await publicacionService.GetListAsync(x => x.Titulo.Contains(Criterio));
+                    break;
+                case "3":
+                    lista = await publicacionService.GetListAsync(x => x.Autor.Contains(Criterio));
+                    break;
+            }
+        }
+        else
+        {
+            lista = await publicacionService.GetListAsync(x => true);
+        }
+    }
 }

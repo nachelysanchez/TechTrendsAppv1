@@ -10,6 +10,7 @@ namespace TechTrendsAppv1.BLL.PublicacionesServices
         public Task<bool> Insertar(Publicaciones publicacion);
         public Task<bool> Modificar(Publicaciones publicacion);
         public Task<List<Publicaciones>> GetPublicaciones();
+        public Task<Publicaciones> GetPublicacion(int id);
         public Task<List<Publicaciones>> GetListAsync(Expression<Func<Publicaciones, bool>> criterio);
 
     }

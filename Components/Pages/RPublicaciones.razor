@@ -1,4 +1,5 @@
 ﻿@page "/rPublicaciones"
+@page "/rPublicaciones/{parametro:int}"
 @using TechTrendsAppv1.Modelos
 @using TechTrendsAppv1.BLL.PublicacionesServices
 @inject IPublicacionesService publicacionService
@@ -43,6 +44,9 @@
                         <label>Imagen</label>
                         <InputFile class="file-input" OnChange="(e) => {OnInputFileChange(e);}"/>
                     </div>
+                    <div class="row">
+                        <img style="height:100px; width:100px" src="@imgUrl"/>
+                    </div>
                 </div>
             </form>
         </div>
@@ -57,8 +61,41 @@
 </EditForm>
 
 @code {
+    [Parameter]
+    public int parametro { get; set; }
     public Publicaciones publicaciones { get; set; } = new();
     private bool visible;
+    public string imgUrl { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (parametro > 0)
+        {
+            await Buscar(parametro);
+        }
+        else
+        {
+            await Nuevo();
+        }
+    }
+    private async Task Buscar(int id)
+    {
+        if (id > 0)
+        {
+            var encontrado = await publicacionService.GetPublicacion(id);
+            if (encontrado != null)
+            {
+                this.publicaciones = encontrado;
+                await DesconvertirImagen(publicaciones.Audiovisual, publicaciones.Visibilidad);
+            }
+            else
+            {
+                await Nuevo();
+                toast.ShowWarning($"No se ha encontrado la publicacion con el id ingresado");
+            }
+        }
+    }
 
     async Task OnInputFileChange(InputFileChangeEventArgs archivo)
     {
@@ -68,6 +105,12 @@
             await archivo.File.OpenReadStream().CopyToAsync(ms);
             publicaciones.Audiovisual = ms.ToArray();
         }
+    }
+
+    async Task DesconvertirImagen(byte[] imagen, int visi)
+    {
+        visible = visi == 0 ? false : true;
+        imgUrl = "data:image/png;base64, " + Convert.ToBase64String(imagen);
     }
 
     private async Task Nuevo()
