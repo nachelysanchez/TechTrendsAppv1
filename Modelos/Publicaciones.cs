@@ -7,16 +7,17 @@ namespace TechTrendsAppv1.Modelos
     {
         [Key]
         public int IdPublicacion { get; set; }
-        public DateTime Fecha { get; set; }
+        public DateTime Fecha { get; set; } = DateTime.Now;
+        public string Titulo { get; set; } = string.Empty;
         public string Autor { get; set; } = string.Empty;
         public string Contenido { get; set; } = string.Empty;
         public byte[]? Audiovisual { get; set; }
-        public int Visibilidad { get; set; }
+        public int Visibilidad { get; set; } = 0;
         public int IdEstado { get; set; }
         [ForeignKey("IdEstado")]
-        public Estados Estado { get; set; } = new();
+        public Estados Estado { get; set; }
         public int IdEtiqueta { get; set; }
-        [ForeignKey("IdEtiquera")]
-        public Etiquetas Etiqueta { get; set; } = new();
+        [ForeignKey("IdEtiqueta")]
+        public Etiquetas Etiqueta { get; set; }
     }
 }

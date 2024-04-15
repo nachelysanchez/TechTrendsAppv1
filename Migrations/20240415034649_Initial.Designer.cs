@@ -12,8 +12,8 @@ using TechTrendsAppv1.DAL;
 namespace TechTrendsAppv1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20240403153452_initial")]
-    partial class initial
+    [Migration("20240415034649_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -146,6 +146,9 @@ namespace TechTrendsAppv1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPermisoRol"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<int>("IdPermiso")
                         .HasColumnType("int");
 
@@ -214,11 +217,12 @@ namespace TechTrendsAppv1.Migrations
                     b.Property<int>("IdEstado")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdEtiquera")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdEtiqueta")
                         .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Visibilidad")
                         .HasColumnType("int");
@@ -227,7 +231,7 @@ namespace TechTrendsAppv1.Migrations
 
                     b.HasIndex("IdEstado");
 
-                    b.HasIndex("IdEtiquera");
+                    b.HasIndex("IdEtiqueta");
 
                     b.ToTable("Publicaciones");
                 });
@@ -368,7 +372,7 @@ namespace TechTrendsAppv1.Migrations
 
                     b.HasOne("TechTrendsAppv1.Modelos.Etiquetas", "Etiqueta")
                         .WithMany()
-                        .HasForeignKey("IdEtiquera")
+                        .HasForeignKey("IdEtiqueta")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

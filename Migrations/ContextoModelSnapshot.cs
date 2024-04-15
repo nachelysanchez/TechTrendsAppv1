@@ -143,6 +143,9 @@ namespace TechTrendsAppv1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPermisoRol"));
 
+                    b.Property<bool>("Activo")
+                        .HasColumnType("bit");
+
                     b.Property<int>("IdPermiso")
                         .HasColumnType("int");
 
@@ -211,11 +214,12 @@ namespace TechTrendsAppv1.Migrations
                     b.Property<int>("IdEstado")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdEtiquera")
-                        .HasColumnType("int");
-
                     b.Property<int>("IdEtiqueta")
                         .HasColumnType("int");
+
+                    b.Property<string>("Titulo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Visibilidad")
                         .HasColumnType("int");
@@ -224,7 +228,7 @@ namespace TechTrendsAppv1.Migrations
 
                     b.HasIndex("IdEstado");
 
-                    b.HasIndex("IdEtiquera");
+                    b.HasIndex("IdEtiqueta");
 
                     b.ToTable("Publicaciones");
                 });
@@ -365,7 +369,7 @@ namespace TechTrendsAppv1.Migrations
 
                     b.HasOne("TechTrendsAppv1.Modelos.Etiquetas", "Etiqueta")
                         .WithMany()
-                        .HasForeignKey("IdEtiquera")
+                        .HasForeignKey("IdEtiqueta")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

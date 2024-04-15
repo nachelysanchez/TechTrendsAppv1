@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34714.143
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TechTrendsAppv1", "TechTrendsAppv1.csproj", "{A9C3EBB6-9653-437E-8DF6-1B3EE385C603}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrendTechv1.nUnitTests", "..\TrendTechv1.nUnitTests\TrendTechv1.nUnitTests.csproj", "{5C91FDF1-D92D-4E2F-AD27-22AB07F6D96C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{A9C3EBB6-9653-437E-8DF6-1B3EE385C603}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9C3EBB6-9653-437E-8DF6-1B3EE385C603}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9C3EBB6-9653-437E-8DF6-1B3EE385C603}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C91FDF1-D92D-4E2F-AD27-22AB07F6D96C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C91FDF1-D92D-4E2F-AD27-22AB07F6D96C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C91FDF1-D92D-4E2F-AD27-22AB07F6D96C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C91FDF1-D92D-4E2F-AD27-22AB07F6D96C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

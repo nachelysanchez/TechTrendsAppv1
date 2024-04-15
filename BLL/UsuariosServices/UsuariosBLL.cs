@@ -97,5 +97,21 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
             }
             return lista;
         }
+
+        public async Task<bool> ModificarUsuario(Usuarios usuario)
+        {
+            bool paso = false;
+            Usuarios userAux = usuario;
+            try
+            {
+                contexto.Update(usuario);
+                paso = await contexto.SaveChangesAsync() > 0;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return paso;
+        }
     }
 }

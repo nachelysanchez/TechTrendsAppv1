@@ -1,5 +1,6 @@
 using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
+using TechTrendsAppv1.BLL.PublicacionesServices;
 using TechTrendsAppv1.BLL.Roles;
 using TechTrendsAppv1.BLL.RolesServices;
 using TechTrendsAppv1.BLL.UsuariosServices;
@@ -25,6 +26,7 @@ builder.Services.AddBlazoredToast();
 builder.Services.AddScoped<SesionDto>();
 builder.Services.AddScoped<IRolesService, RolesBLL>();
 builder.Services.AddScoped<IUsuariosService, UsuariosBLL>();
+builder.Services.AddScoped<IPublicacionesService, PublicacionesBLL>();
 
 var app = builder.Build();
 

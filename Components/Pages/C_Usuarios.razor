@@ -1,11 +1,13 @@
 ﻿@page "/cUsuarios"
 @using TechTrendsAppv1.Modelos
 @using TechTrendsAppv1.BLL.UsuariosServices
+@using TechTrendsAppv1.BLL.RolesServices
 @inject IUsuariosService usuarioService
+@inject IRolesService rolesService
 @rendermode InteractiveServer
+@inject IToastService toast
 
-<EditForm Model="lista">
-    <DataAnnotationsValidator />
+<div class="container">
     <div class="card">
         <div class="card-header">
             <h3>Consulta de Tareas</h3>
@@ -47,32 +49,112 @@
                         <td>@item.Nombre</td>
                         <td>@item.Email</td>
                         <td>@item.rol.Nombre</td>
-                        @* <td>
-                            <a class="btn btn-sm btn-outline-primary material-symbols-outlined" href="/rRoles/@item.IdRol">
-                                visibility
-                            </a>
-                        </td> *@
+                        <td>
+                            <button class="btn btn-primary" @onclick="() => EventVer(item)">
+                                <span class="material-symbols-outlined">
+                                    visibility
+                                </span>
+                            </button>
+                        </td>
                     </tr>
                 }
             </tbody>
         </table>
+        @if (ShowDialog)  
+        {  
+            <div class="modal show d-block" id="roles" tabindex="-1"role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">  
+                        <div class="modal-header">  
+                            <h5 class="modal-title" id="lbl">Add City</h5>  
+                            <button type="button" class="close" @onclick="OcultarDialogo"  
+                            data-dismiss="modal" aria-label="Close">  
+                                <span aria-hidden="true">X</span>  
+                            </button>  
+                        </div>  
+                        <div class="modal-body">
+                            <div class="form-row align-items-center">
+                                <div class="col" style="margin-bottom:2rem;">
+                                    <div class="form-group">
+                                        <label>Usuario</label>
+                                        <div class="input-group">
+                                            <InputText class="form-control col-4" @bind-Value="usuarioSeleccionado.Nombre" disabled="true"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Rol</label>
+                                <div class="input-group">
+                                
+                                    <InputSelect id="roles" @bind-Value="usuarioSeleccionado.rol.IdRol" class="form-control col-4">
+                                        @foreach(var item in roles){
+                                            <option value="@item.IdRol">@item.Nombre</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                            </div>
+                        </div>  
+                         <div class="modal-footer">
+                            <button type="button" @onclick="Modificar" class="btn btn-primary">Actualizar</button>
+                            <button type="button" class="btn btn-secondary" 
+                            @onclick="OcultarDialogo" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>  
+                </div>  
+            </div>  
+        }
     </div>
-</EditForm>
+</div>
 
 
 @code {
     public int Id { get; set; }
     public string Filtro { get; set; }
     public string Criterio { get; set; }
+    private bool ShowDialog = false;
     public List<Usuarios> lista { get; set; } = new List<Usuarios>();
-    private void EventVer(int idUsuario)
+    public Usuarios usuarioSeleccionado { get; set; } = new Usuarios();
+    private List<Roles> roles = new List<Roles>();
+    protected override async Task OnInitializedAsync()
     {
-        Id = idUsuario;
+        roles = await rolesService.GetRolesAsync();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task EventVer(Usuarios usuario)
+    {
+        ShowDialog = true;
+        usuarioSeleccionado = usuario;
+    }
+
+    void OcultarDialogo()
+    {
+        ShowDialog = false;
+    }
+
+    private async void Modificar()
+    {
+        if(usuarioSeleccionado.rol != null)
+        {
+            usuarioSeleccionado.IdRol = usuarioSeleccionado.rol.IdRol;
+            var estado = await usuarioService.ModificarUsuario(usuarioSeleccionado);
+            if (estado)
+            {
+                ShowDialog = false;
+                toast.ShowSuccess("El usuario se actualizo correctamente");
+            }
+            else
+            {
+                toast.ShowError("El usuario no se actualizo");
+            }
+        }
     }
 
     private async Task Buscar()
     {
         lista = new List<Usuarios>();
+
 
         if (Criterio != null)
         {

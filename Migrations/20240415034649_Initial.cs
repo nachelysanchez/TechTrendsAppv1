@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TechTrendsAppv1.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -95,7 +95,8 @@ namespace TechTrendsAppv1.Migrations
                     IdPermisoRol = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     IdRol = table.Column<int>(type: "int", nullable: false),
-                    IdPermiso = table.Column<int>(type: "int", nullable: false)
+                    IdPermiso = table.Column<int>(type: "int", nullable: false),
+                    Activo = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -143,13 +144,13 @@ namespace TechTrendsAppv1.Migrations
                     IdPublicacion = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Titulo = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contenido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Audiovisual = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     Visibilidad = table.Column<int>(type: "int", nullable: false),
                     IdEstado = table.Column<int>(type: "int", nullable: false),
-                    IdEtiqueta = table.Column<int>(type: "int", nullable: false),
-                    IdEtiquera = table.Column<int>(type: "int", nullable: false)
+                    IdEtiqueta = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -161,8 +162,8 @@ namespace TechTrendsAppv1.Migrations
                         principalColumn: "IdEstado",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Publicaciones_Etiquetas_IdEtiquera",
-                        column: x => x.IdEtiquera,
+                        name: "FK_Publicaciones_Etiquetas_IdEtiqueta",
+                        column: x => x.IdEtiqueta,
                         principalTable: "Etiquetas",
                         principalColumn: "IdEtiqueta",
                         onDelete: ReferentialAction.Cascade);
@@ -263,9 +264,9 @@ namespace TechTrendsAppv1.Migrations
                 column: "IdEstado");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Publicaciones_IdEtiquera",
+                name: "IX_Publicaciones_IdEtiqueta",
                 table: "Publicaciones",
-                column: "IdEtiquera");
+                column: "IdEtiqueta");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RespuestaComentarios_IdComentario",

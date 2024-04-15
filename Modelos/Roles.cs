@@ -12,6 +12,6 @@ namespace TechTrendsAppv1.Modelos
         public string Nombre { get; set; } = string.Empty;
 
         [ForeignKey("IdRol")]
-        public List<PermisosRoles> Permisos { get; set; } = new List<PermisosRoles>();
+        public virtual List<PermisosRoles> Permisos { get; set; } = new List<PermisosRoles>();
     }
 }
