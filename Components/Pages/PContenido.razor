@@ -2,9 +2,10 @@
 @using TechTrendsAppv1.Modelos
 @using TechTrendsAppv1.BLL.PublicacionesServices
 @inject IPublicacionesService publicacionService
+@inject NavigationManager nav
 @rendermode InteractiveServer
 
-<div class="container ">
+<div class="container">
     <div class="container_content">
         <h2>Panel de contenido</h2>
         <h4>Conoce las nuevas novedades de la tecnolog&iacute;a</h4>
@@ -13,7 +14,7 @@
             {
                 @foreach (var item in vistas)
                 {
-                    <div class="carta">
+                    <div class="carta" @onclick="() => {Navegar(item.Id);}">
                         <div>
                             <img src="@item.imgUrl"/>
                         </div>
@@ -39,11 +40,17 @@
         {
             vistas.Add(new Carta
                 {
+                    Id = item.IdPublicacion,
                     Titulo = item.Titulo,
                     imgUrl = "data:image/png;base64, " + Convert.ToBase64String(item.Audiovisual)
                 });
         }
         await  base.OnInitializedAsync();
+    }
+
+    private void Navegar(int id)
+    {
+        nav.NavigateTo($"/verContenidoL/{id}");
     }
 
 }

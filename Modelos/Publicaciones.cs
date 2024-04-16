@@ -25,6 +25,7 @@ namespace TechTrendsAppv1.Modelos
 
 public class Carta
 {
+    public int Id { get; set; }
     public string Titulo { get; set; }
     public string imgUrl { get; set; }
 }

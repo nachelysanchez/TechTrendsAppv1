@@ -1,0 +1,57 @@
+﻿@page "/verContenidoL/{parametro:int}"
+@using TechTrendsAppv1.Modelos
+@using TechTrendsAppv1.BLL.PublicacionesServices
+@inject IPublicacionesService publicacionService
+@rendermode InteractiveServer
+
+<div class="container">
+    <div class="container_content">
+        <div class="titulo">
+            <h3>@publicaciones.Titulo</h3>
+        </div>
+        <div class="autor">
+            <label>@publicaciones.Autor - @publicaciones.Fecha</label>
+        </div>
+        <div class="imagen">
+            <img src="@imgUrl"/>
+        </div>
+        <div class="contenido">
+            <h5>@prueba</h5>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int parametro { get; set; }
+    public Publicaciones publicaciones { get; set; } = new();
+    public string imgUrl { get; set; } = string.Empty;
+    string prueba = $"It is a good platform to learn programming. It is an educational website. Prepare for the R of product based companies like Microsoft, Amazon, Adobe etc with a free online placement preparation course. The course focuses on various MCQ's & Codingl";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        if (parametro > 0)
+        {
+            await Buscar(parametro);
+        }
+    }
+
+    private async Task Buscar(int id)
+    {
+        if (id > 0)
+        {
+            var encontrado = await publicacionService.GetPublicacionDetallada(id);
+            if (encontrado != null)
+            {
+                this.publicaciones = encontrado;
+                await DesconvertirImagen(publicaciones.Audiovisual);
+            }
+        }
+    }
+
+    async Task DesconvertirImagen(byte[] imagen)
+    {
+        imgUrl = "data:image/png;base64, " + Convert.ToBase64String(imagen);
+    }
+}

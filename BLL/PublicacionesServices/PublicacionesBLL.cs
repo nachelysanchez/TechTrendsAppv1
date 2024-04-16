@@ -62,6 +62,26 @@ namespace TechTrendsAppv1.BLL.PublicacionesServices
             return publicacion;
         }
 
+        public async Task<Publicaciones> GetPublicacionDetallada(int id)
+        {
+            Publicaciones publicacion = new Publicaciones();
+            try
+            {
+                publicacion = await contexto.Publicaciones
+                    .Where(x => x.IdPublicacion == id)
+                    .Include(x => x.Etiqueta)
+                    .Include(x => x.Estado)
+                    .AsNoTracking()
+                    .FirstAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return publicacion;
+        }
+
         public async Task<List<Publicaciones>> GetPublicaciones()
         {
             List<Publicaciones> lista = new List<Publicaciones>();
