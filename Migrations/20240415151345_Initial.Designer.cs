@@ -12,7 +12,7 @@ using TechTrendsAppv1.DAL;
 namespace TechTrendsAppv1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20240415034649_Initial")]
+    [Migration("20240415151345_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -224,8 +224,8 @@ namespace TechTrendsAppv1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Visibilidad")
-                        .HasColumnType("int");
+                    b.Property<bool>("Visibilidad")
+                        .HasColumnType("bit");
 
                     b.HasKey("IdPublicacion");
 

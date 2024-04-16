@@ -1,0 +1,49 @@
+﻿@page "/pContenidoLector"
+@using TechTrendsAppv1.Modelos
+@using TechTrendsAppv1.BLL.PublicacionesServices
+@inject IPublicacionesService publicacionService
+@rendermode InteractiveServer
+
+<div class="container ">
+    <div class="container_content">
+        <h2>Panel de contenido</h2>
+        <h4>Conoce las nuevas novedades de la tecnolog&iacute;a</h4>
+        <div class="contenido">
+            @if (vistas != null)
+            {
+                @foreach (var item in vistas)
+                {
+                    <div class="carta">
+                        <div>
+                            <img src="@item.imgUrl"/>
+                        </div>
+                        <div class="text-center">
+                            <label>@item.Titulo</label>
+                        </div>
+                    </div>
+                    <br />
+                }
+            }
+        </div>
+    </div>
+    
+</div>
+
+@code {
+    public List<Publicaciones> lista { get; set; }
+    public List<Carta> vistas { get; set; } = new();
+    protected override async Task OnInitializedAsync()
+    {
+        lista = await publicacionService.GetPublicaciones();
+        foreach (var item in lista)
+        {
+            vistas.Add(new Carta
+                {
+                    Titulo = item.Titulo,
+                    imgUrl = "data:image/png;base64, " + Convert.ToBase64String(item.Audiovisual)
+                });
+        }
+        await  base.OnInitializedAsync();
+    }
+
+}

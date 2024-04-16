@@ -148,7 +148,7 @@ namespace TechTrendsAppv1.Migrations
                     Autor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contenido = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Audiovisual = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    Visibilidad = table.Column<int>(type: "int", nullable: false),
+                    Visibilidad = table.Column<bool>(type: "bit", nullable: false),
                     IdEstado = table.Column<int>(type: "int", nullable: false),
                     IdEtiqueta = table.Column<int>(type: "int", nullable: false)
                 },

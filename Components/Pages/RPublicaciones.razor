@@ -25,27 +25,27 @@
 
                     <div class="form-group">
                         <label>T&iacute;tulo</label>
-                        <InputText class="form-control"  @bind-Value="publicaciones.Titulo" />
+                        <InputText class="form-control" @bind-Value="publicaciones.Titulo" />
                     </div>
                     <div class="form-group">
                         <label>Autor</label>
-                        <InputText class="form-control"  @bind-Value="publicaciones.Autor" />
+                        <InputText class="form-control" @bind-Value="publicaciones.Autor" />
                     </div>
                     <div class="form-group">
                         <label>Contenido</label>
                         <textarea class="form-control" cols="40" rows="8" @bind="publicaciones.Contenido" />
                     </div>
                     <div class="form-group">
-                        <input type="checkbox" @bind-value="visible"/>
+                        <input type="checkbox" @bind-value="publicaciones.Visibilidad" />
                         Visible
                     </div>
 
                     <div class="form-group" style="margin-top:2rem;">
                         <label>Imagen</label>
-                        <InputFile class="file-input" OnChange="(e) => {OnInputFileChange(e);}"/>
+                        <InputFile class="file-input" OnChange="(e) => {OnInputFileChange(e);}" />
                     </div>
                     <div class="row">
-                        <img style="height:100px; width:100px" src="@imgUrl"/>
+                        <img style="height:100px; width:100px" src="@imgUrl" />
                     </div>
                 </div>
             </form>
@@ -64,8 +64,7 @@
     [Parameter]
     public int parametro { get; set; }
     public Publicaciones publicaciones { get; set; } = new();
-    private bool visible;
-    public string imgUrl { get; set; }
+    public string imgUrl { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -87,7 +86,7 @@
             if (encontrado != null)
             {
                 this.publicaciones = encontrado;
-                await DesconvertirImagen(publicaciones.Audiovisual, publicaciones.Visibilidad);
+                await DesconvertirImagen(publicaciones.Audiovisual);
             }
             else
             {
@@ -107,22 +106,20 @@
         }
     }
 
-    async Task DesconvertirImagen(byte[] imagen, int visi)
+    async Task DesconvertirImagen(byte[] imagen)
     {
-        visible = visi == 0 ? false : true;
         imgUrl = "data:image/png;base64, " + Convert.ToBase64String(imagen);
     }
 
     private async Task Nuevo()
     {
-        publicaciones = new Publicaciones(); 
-
+        publicaciones = new Publicaciones();
+        imgUrl = string.Empty;
     }
 
 
     private async Task Guardar()
     {
-        publicaciones.Visibilidad = visible == false ? 0 : 1;
         publicaciones.IdEstado = 1;
         publicaciones.IdEtiqueta = 1;
         var guardado = await publicacionService.Guardar(publicaciones);

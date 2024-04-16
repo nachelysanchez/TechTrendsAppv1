@@ -12,7 +12,7 @@ namespace TechTrendsAppv1.Modelos
         public string Autor { get; set; } = string.Empty;
         public string Contenido { get; set; } = string.Empty;
         public byte[]? Audiovisual { get; set; }
-        public int Visibilidad { get; set; } = 0;
+        public bool Visibilidad { get; set; }
         public int IdEstado { get; set; }
         [ForeignKey("IdEstado")]
         public Estados Estado { get; set; }
@@ -20,4 +20,11 @@ namespace TechTrendsAppv1.Modelos
         [ForeignKey("IdEtiqueta")]
         public Etiquetas Etiqueta { get; set; }
     }
+}
+
+
+public class Carta
+{
+    public string Titulo { get; set; }
+    public string imgUrl { get; set; }
 }

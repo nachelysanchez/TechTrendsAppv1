@@ -221,8 +221,8 @@ namespace TechTrendsAppv1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Visibilidad")
-                        .HasColumnType("int");
+                    b.Property<bool>("Visibilidad")
+                        .HasColumnType("bit");
 
                     b.HasKey("IdPublicacion");
 

@@ -68,7 +68,7 @@ namespace TechTrendsAppv1.BLL.PublicacionesServices
 
             try
             {
-                lista = await contexto.Publicaciones.ToListAsync();
+                lista = await contexto.Publicaciones.AsNoTracking().ToListAsync();
             }
             catch (Exception)
             {
