@@ -117,5 +117,21 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
             }
             return paso;
         }
+
+        public async Task<bool> RegistrarUsuario(Usuarios usuario)
+        {
+            bool paso = false;
+            try
+            {
+                await contexto.Usuarios.AddAsync(usuario);
+                paso = await contexto.SaveChangesAsync() > 0;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return paso;
+        }
     }
 }

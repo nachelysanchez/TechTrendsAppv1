@@ -1,5 +1,10 @@
 ﻿@page "/Register"
+@using TechTrendsAppv1.Modelos
 @layout Login
+@using TechTrendsAppv1.BLL.UsuariosServices
+@inject IUsuariosService userService
+@rendermode RenderMode.InteractiveServer
+@inject NavigationManager navManager
 
 <div class="container">
     <div class="container_content">
@@ -7,23 +12,38 @@
         <h1>Registrate para saber lo &uacute;timo en Tecnolog&iacute;a</h1>
 
         <form>
+            <label>Nombre completo</label>
+            <div class="input_row">
+                <input type="text" @bind-value="user.Nombre" placeholder="Ingresa tu nombre completo" />
+            </div>
             <label>Email</label>
             <div class="input_row">
-                <input type="email" placeholder="Ingresa tu e-mail" />
+                <input type="email" @bind-value="user.Email" placeholder="Ingresa tu e-mail" />
             </div>
             <div class="input_header">
                 <label>Contrase&ntilde;a</label>
                 <a href="#">¿Olvidaste tu contrase&ntilde;a?</a>
             </div>
             <div class="input_row">
-                <input type="password" id="password" placeholder="Contraseña" />
-                <span id="password-eye">
+                <input type="password" @bind-value="user.Contrasena" id="password" placeholder="Contraseña" />
+                <span id="password-eye" @onclick="TogglePasswordVisibility">
                     <i class="material-symbols-outlined">
-                        visibility_off
+                        @if (showPassword == false)
+                        {
+                            propiedad = "visibility_off";
+                            tipo = "text";
+                        }
+                        else
+                        {
+                            propiedad = "visibility";
+                            tipo = "password";
+                        }
+                        @propiedad;
                     </i>
                 </span>
             </div>
-            <button>Ingresar</button>
+            <label>@mensaje</label>
+            <button @onclick="Registrarse">Ingresar</button>
         </form>
 
         <h6>O contin&uacute;a con</h6>
@@ -31,12 +51,29 @@
             <a href="#"><img src="/images/LogoGoogle.png" alt="google" /></a>
             <a href="#"><img src="/images/LogoFacebook.png" alt="facebook" /></a>
         </div>
-        <p>¿No tienes una cuenta todav&iacute;a? <a href="#">¡Registrate gratis!</a></p>
-
     </div>
-    <script src="main.js"></script>
 </div>
 
 @code {
+    private string mensaje = string.Empty, propiedad = "visibility_off", tipo = "password";
+    private Usuarios user = new();
+    private bool showPassword = false;
 
+    private async Task Registrarse()
+    {
+        var paso = await userService.RegistrarUsuario(user);
+        if (paso)
+        {
+            navManager.NavigateTo("/Home");
+        }
+        else
+        {
+            this.OnInitialized();
+            mensaje = "No se pudo registrar";
+        }
+    }
+    private void TogglePasswordVisibility()
+    {
+        showPassword = !showPassword;
+    }
 }
