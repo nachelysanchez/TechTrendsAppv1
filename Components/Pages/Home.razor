@@ -15,12 +15,16 @@
         <h2>Explora todo lo que puedes hacer</h2>
 
         <div class="content_funciones">
-            <button @onclick="() => {nav.NavigateTo(navigation);}" style="background-color:#2d9ec0; color:white;">Ver Publicaciones</button>
+            <button @onclick="() => {nav.NavigateTo(navigationPublicaciones);}" style="background-color:#0094ff; color:white;">Ver Publicaciones</button>
+            <button @onclick="() => {nav.NavigateTo(navigationLogin);}" style="background-color:#2d9ec0; color:white;">Iniciar Sesi&oacute;n</button>
+            <button @onclick="() => {nav.NavigateTo(navigationRegistrar);}" style="background-color:#06081c; color:white;">Registrate</button>
         </div>
     </div>
 </div>
 @code{
-    string navigation = "/pContenidoLector";
+    string navigationPublicaciones = "/pContenidoLector";
+    string navigationRegistrar = "/pContenidoLector";
+    string navigationLogin = "/Login";
 }
 <style>
     body {

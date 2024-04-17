@@ -1,8 +1,12 @@
 ﻿@page "/rPublicaciones"
 @page "/rPublicaciones/{parametro:int}"
+@using TechTrendsAppv1.BLL.EstadosService
+@using TechTrendsAppv1.BLL.EtiquetasService
 @using TechTrendsAppv1.Modelos
 @using TechTrendsAppv1.BLL.PublicacionesServices
 @inject IPublicacionesService publicacionService
+@inject IEtiquetasService etiquetaService
+@inject IEstadosService estadosService
 @inject IToastService toast
 @rendermode InteractiveServer
 
@@ -23,6 +27,28 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-6">
+
+                            <label>Etiqueta</label>
+                            <InputSelect class="form-control col-4" id="etiquetas" @bind-Value="publicaciones.IdEtiqueta">
+                                @foreach (var item in etiquetas)
+                                {
+                                    <option value="@item.IdEtiqueta">@item.Nombre</option>
+                                }
+                            </InputSelect>
+                        
+                        </div>
+                        <div class="col-6">
+                            <label>Estado</label>
+                            <InputSelect class="form-control col-4" id="estados" @bind-Value="publicaciones.IdEstado">
+                                @foreach (var item in estados)
+                                {
+                                    <option value="@item.IdEstado">@item.Nombre</option>
+                                }
+                            </InputSelect>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label>T&iacute;tulo</label>
                         <InputText class="form-control" @bind-Value="publicaciones.Titulo" />
@@ -36,8 +62,8 @@
                         <textarea class="form-control" cols="40" rows="8" @bind="publicaciones.Contenido" />
                     </div>
                     <div class="form-group">
-                        <input type="checkbox" @bind-value="publicaciones.Visibilidad" />
-                        Visible
+                        <InputCheckbox class="form-check" @bind-Value="publicaciones.Visibilidad" />
+                        Visible para el p&uacute;blico
                     </div>
 
                     <div class="form-group" style="margin-top:2rem;">
@@ -55,6 +81,7 @@
                 <button @onclick="Nuevo" type="button" class="btn btn-lg btn-primary">Nuevo</button>
                 <button type="submit" class="btn btn-lg btn-success">Guardar</button>
                 <button type="button" class="btn btn-lg btn-danger">Eliminar</button>
+                <button type="button" class="btn btn-lg btn-light">Guardar como plantilla</button>
             </div>
         </div>
     </div>
@@ -64,11 +91,15 @@
     [Parameter]
     public int parametro { get; set; }
     public Publicaciones publicaciones { get; set; } = new();
+    public List<Etiquetas> etiquetas { get; set; } = new List<Etiquetas>();
+    public List<Estados> estados { get; set; } = new List<Estados>();
     public string imgUrl { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        etiquetas = await etiquetaService.GetEtiquetas();
+        estados = await estadosService.GetEstados();
         if (parametro > 0)
         {
             await Buscar(parametro);
