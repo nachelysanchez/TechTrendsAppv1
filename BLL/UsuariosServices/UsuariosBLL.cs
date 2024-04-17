@@ -72,7 +72,7 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
             List<Usuarios> usuarios = new List<Usuarios>();
             try
             {
-                usuarios = await contexto.Usuarios.Include(x => x.rol).AsNoTracking().ToListAsync();
+                usuarios = await contexto.Usuarios.Include(x => x.Rol).AsNoTracking().ToListAsync();
             }
             catch (Exception)
             {
@@ -88,7 +88,10 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
 
             try
             {
-                lista = await contexto.Usuarios.Where(criterio).Include(x => x.rol).ToListAsync();
+                lista = await contexto.Usuarios.Where(criterio)
+                    .Include(x => x.Rol)
+                    .AsNoTracking()
+                    .ToListAsync();
             }
             catch (Exception)
             {
@@ -104,7 +107,8 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
             Usuarios userAux = usuario;
             try
             {
-                contexto.Update(usuario);
+                userAux.Rol = null;
+                contexto.Usuarios.Update(usuario);
                 paso = await contexto.SaveChangesAsync() > 0;
             }
             catch (Exception)

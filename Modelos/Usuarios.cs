@@ -12,6 +12,6 @@ namespace TechTrendsAppv1.Modelos
         public string Contrasena { get; set; } = string.Empty;
         public int IdRol { get; set; }
         [ForeignKey("IdRol")]
-        public Roles rol { get; set; }
+        public Roles Rol { get; set; }
     }
 }

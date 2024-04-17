@@ -38,7 +38,7 @@ namespace TechTrendsAppv1.BLL.Roles
         {
             try
             {
-                var roles = await contexto.Roles.ToListAsync();
+                var roles = await contexto.Roles.AsNoTracking().ToListAsync();
                 return roles;
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace TechTrendsAppv1.BLL.Roles
                     .Include(x => x.Permisos)
                     .ThenInclude(x => x.Permiso)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync();
+                    .FirstAsync();
             }
             catch (Exception)
             {
@@ -96,11 +96,11 @@ namespace TechTrendsAppv1.BLL.Roles
             bool paso = false;
             try
             {
-                await contexto.Roles.AddAsync(rol);
                 foreach (var item in rol.Permisos)
                 {
                     contexto.Entry(item).State = EntityState.Added;
                 }
+                await contexto.Roles.AddAsync(rol);
                 paso = await contexto.SaveChangesAsync() > 0;
             }
             catch (Exception)
@@ -114,19 +114,8 @@ namespace TechTrendsAppv1.BLL.Roles
             bool paso = false;
             try
             {
-                var rolAnterior = await contexto.Roles.Where(x => x.IdRol == rol.IdRol)
-                    .Include(x => x.Permisos)
-                    .AsNoTracking()
-                    .SingleOrDefaultAsync();
-
-                await contexto.Database.ExecuteSqlAsync($"DELETE FROM PermisosRoles WHERE IdRol = {rol.IdRol}");
-
-                foreach (var item in rol.Permisos)
-                {
-                    contexto.Entry(item).State = EntityState.Added;
-                }
-
-                contexto.Entry(rol).State = EntityState.Modified;
+                contexto.Update(rol);
+                
                 paso = await contexto.SaveChangesAsync() > 0;
             }
             catch (Exception)

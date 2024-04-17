@@ -10,7 +10,7 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h3>Consulta de Tareas</h3>
+            <h3>Consulta de Usuarios</h3>
         </div>
         <div class="card-body">
             <form>
@@ -48,7 +48,7 @@
                     <tr>
                         <td>@item.Nombre</td>
                         <td>@item.Email</td>
-                        <td>@item.rol.Nombre</td>
+                        <td>@item.IdRol</td>
                         <td>
                             <button class="btn btn-primary" @onclick="() => EventVer(item)">
                                 <span class="material-symbols-outlined">
@@ -66,7 +66,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">  
                         <div class="modal-header">  
-                            <h5 class="modal-title" id="lbl">Add City</h5>  
+                            <h5 class="modal-title" id="lbl">Actualizar rol de Usuario</h5>  
                             <button type="button" class="close" @onclick="OcultarDialogo"  
                             data-dismiss="modal" aria-label="Close">  
                                 <span aria-hidden="true">X</span>  
@@ -87,7 +87,7 @@
                                 <label>Rol</label>
                                 <div class="input-group">
                                 
-                                    <InputSelect id="roles" @bind-Value="usuarioSeleccionado.rol.IdRol" class="form-control col-4">
+                                    <InputSelect id="roles" @bind-Value="usuarioSeleccionado.IdRol" class="form-control col-4">
                                         @foreach(var item in roles){
                                             <option value="@item.IdRol">@item.Nombre</option>
                                         }
@@ -115,6 +115,7 @@
     private bool ShowDialog = false;
     public List<Usuarios> lista { get; set; } = new List<Usuarios>();
     public Usuarios usuarioSeleccionado { get; set; } = new Usuarios();
+    public Usuarios Aux { get; set; } = new Usuarios();
     private List<Roles> roles = new List<Roles>();
     protected override async Task OnInitializedAsync()
     {
@@ -135,10 +136,11 @@
 
     private async void Modificar()
     {
-        if(usuarioSeleccionado.rol != null)
+        if(usuarioSeleccionado.Rol != null)
         {
-            usuarioSeleccionado.IdRol = usuarioSeleccionado.rol.IdRol;
+            usuarioSeleccionado.IdRol = usuarioSeleccionado.Rol.IdRol;
             var estado = await usuarioService.ModificarUsuario(usuarioSeleccionado);
+            await Buscar();
             if (estado)
             {
                 ShowDialog = false;
