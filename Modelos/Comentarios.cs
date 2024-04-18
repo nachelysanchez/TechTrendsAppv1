@@ -7,7 +7,7 @@ namespace TechTrendsAppv1.Modelos
     {
         [Key]
         public int IdComentario { get; set; }
-        public DateTime Fecha { get; set; }
+        public DateTime Fecha { get; set; } = DateTime.Now;
         public string Contenido { get; set; } = string.Empty;
         public string Autor { get; set; } = string.Empty;
         public int IdPublicacion { get; set; }

@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TechTrendsAppv1.Modelos
 {
-    public class CalificacionPublicaciones
+    public class CalificacionPublicacion
     {
         [Key]
-        public int IdCalificacion { get; set; }
+        public int IdCalificacionPublicacion { get; set; }
         public int Valoracion { get; set; }
         public int IdPublicacion { get; set; }
         [ForeignKey("IdPublicacion")]

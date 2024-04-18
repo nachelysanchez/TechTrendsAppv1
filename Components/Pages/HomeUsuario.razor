@@ -4,39 +4,41 @@
 @inject NavigationManager navManager
 @rendermode InteractiveServer
 
-<div class="container">
-    <div class="container_content">
-        <h3>¡Bienvenido de nuevo!</h3>
-        <h2>Explora todo lo que puedes hacer</h2>
+    <div class="container">
+        <div class="container_content">
+            <h3>¡Bienvenido de nuevo!</h3>
+            <h2>Explora todo lo que puedes hacer</h2>
 
-        <div class="content_funciones">
-            <button style="background-color:#2d9ec0; color:white;">Crear Publicaciones</button>
-            <button style="background-color:#01b2e1; color:white;">Consultar Publicaciones</button>
-            <button style="background-color:#022332; color:white;">Crear Plantillas</button>
-            <button style="background-color:#d0e3e9; color:black;">Consultar Plantillas</button>
-            <button style="background-color:#0a6d84; color:white;">Revisar pendientes por aprobar</button>
-            <button @onclick="Navegar" style="background-color:#6c6c77; color:white;">Consultar roles</button>
-            <button style="background-color:#0b7199; color:white;">Consultar usuarios</button>
-            <button style="background-color:#127092; color:white;">Consultar comentarios</button>
+            <div class="content_funciones">
+                <button @onclick="()=>{Navegar(rpublicacion);}" style="background-color:#2d9ec0; color:white;">Crear Publicaciones</button>
+                <button @onclick="()=>{Navegar(cpublicacion);}" style="background-color:#01b2e1; color:white;">Consultar Publicaciones</button>
+                <button @onclick="()=>{Navegar(cplantilla);}" style="background-color:#d0e3e9; color:black;">Consultar Plantillas</button>
+                <button @onclick="()=>{Navegar(rpendientes);}" style="background-color:#0a6d84; color:white;">Revisar pendientes por aprobar</button>
+                <button @onclick="()=>{Navegar(croles);}" style="background-color:#6c6c77; color:white;">Consultar roles</button>
+                <button @onclick="()=>{Navegar(cusuarios);}" style="background-color:#0b7199; color:white;">Consultar usuarios</button>
+                <button @onclick="()=>{Navegar(ccomentarios);}" style="background-color:#127092; color:white;">Consultar comentarios</button>
+            </div>
         </div>
     </div>
-</div>
-@* @if(Usuario != null){
+@* @if(Usuario != null)
+{
+    
 } 
 else{
     <h3>@mensaje</h3>
 } *@
 @code {
-    // public Usuarios Usuario { get; set; } = null;
-    // private string mensaje = "No puedes estar aqui";
-    // protected async override Task OnInitializedAsync()
-    // {
-    //     Usuario = await usuarioService.GetUsuarioLogueado();
-    //     base.OnInitializedAsync();
-    // }
-
-    public void Navegar()
+    public Usuarios Usuario { get; set; } = null;
+    private string mensaje = "No puedes estar aqui";
+    protected async override Task OnInitializedAsync()
     {
-        navManager.NavigateTo("/cRoles");
+        //Usuario = await usuarioService.GetUsuarioLogueado();
+        base.OnInitializedAsync();
+    }
+    private string croles = "/cRoles", rpublicacion = "/rPublicaciones", cpublicacion = "/cPublicaciones", cplantilla = "/cPlantillas", rpendientes = "/cPublicaciones", cusuarios = "/cUsuarios", ccomentarios = "/cComentarios";
+
+    public void Navegar(string ruta)
+    {
+        navManager.NavigateTo(ruta);
     }
 }

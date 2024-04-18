@@ -1,0 +1,87 @@
+﻿@page "/cPlantillas"
+@using TechTrendsAppv1.BLL.PlantillasService
+@using TechTrendsAppv1.Modelos
+@inject IPlantillasService plantillaService
+@rendermode InteractiveServer
+
+<EditForm Model="lista">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header">
+            <h3>Consulta de Plantillas disponibles</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <div class="input-group d-flex align-items-end">
+                    <select class="form-control col-2" @bind="Filtro">
+                        <option value="0">Todos</option>
+                        <option value="1">Id</option>
+                        <option value="2">Titulo</option>
+                    </select>
+
+                    <div class="flex-fill mx-2">
+                        <label>Criterio</label>
+                        <input type="text" class="form-control" @bind="Criterio" />
+                    </div>
+
+                    <button type="button" class="btn btn-warning" @onclick="Buscar">
+                        <i class="oi oi-magnifying-glass mr-2" /> Buscar
+                    </button>
+                </div>
+
+            </form>
+        </div>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr class="table-info">
+                    <th>Id</th>
+                    <th>Titulo</th>
+                    <th>Descripcion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lista)
+                {
+                    <tr>
+                        <td>@item.IdPlantilla</td>
+                        <td>@item.Titulo</td>
+                        <td>@item.Descripcion</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</EditForm>
+
+@code {
+    public int Id { get; set; }
+    public string Filtro { get; set; }
+    public string Criterio { get; set; }
+    public List<Plantillas> lista { get; set; } = new List<Plantillas>();
+
+    private async Task Buscar()
+    {
+        lista = new List<Plantillas>();
+
+        if (Criterio != null)
+        {
+            switch (Filtro)
+            {
+                case "0":
+                    lista = await plantillaService.GetPlantillas();
+                    break;
+                case "1":
+                    lista = await plantillaService.GetListAsync(t => t.IdPlantilla == int.Parse(Criterio));
+                    break;
+
+                case "2":
+                    lista = await plantillaService.GetListAsync(t => t.Titulo.Contains(Criterio));
+                    break;
+            }
+        }
+        else
+        {
+            lista = await plantillaService.GetListAsync(x => true);
+        }
+    }
+}

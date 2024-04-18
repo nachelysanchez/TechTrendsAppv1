@@ -1,7 +1,10 @@
 using Blazored.Toast;
 using Microsoft.EntityFrameworkCore;
+using TechTrendsAppv1.BLL.CalificacionService;
+using TechTrendsAppv1.BLL.ComentariosService;
 using TechTrendsAppv1.BLL.EstadosService;
 using TechTrendsAppv1.BLL.EtiquetasService;
+using TechTrendsAppv1.BLL.PlantillasService;
 using TechTrendsAppv1.BLL.PublicacionesServices;
 using TechTrendsAppv1.BLL.Roles;
 using TechTrendsAppv1.BLL.RolesServices;
@@ -31,6 +34,9 @@ builder.Services.AddScoped<IUsuariosService, UsuariosBLL>();
 builder.Services.AddScoped<IEtiquetasService, EtiquetasBLL>();
 builder.Services.AddScoped<IPublicacionesService, PublicacionesBLL>();
 builder.Services.AddScoped<IEstadosService, EstadosBLL>();
+builder.Services.AddScoped<IPlantillasService, PlantillasBLL>();
+builder.Services.AddScoped<IComentariosService, ComentariosBLL>();
+builder.Services.AddScoped<ICalificacionesService, CalificacionesBLL>();
 
 var app = builder.Build();
 

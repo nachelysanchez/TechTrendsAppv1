@@ -1,12 +1,22 @@
 ﻿@page "/verContenidoL/{parametro:int}"
+@using TechTrendsAppv1.BLL.CalificacionService
+@using TechTrendsAppv1.BLL.ComentariosService
 @using TechTrendsAppv1.Modelos
 @using TechTrendsAppv1.BLL.PublicacionesServices
 @inject IPublicacionesService publicacionService
+@inject IComentariosService comentarioService
+@inject ICalificacionesService calificacionService
 @rendermode InteractiveServer
 
 <div class="container">
     <div class="container_content">
         <div class="titulo">
+            @if(publicaciones.Etiqueta != null)
+            {
+                <div class="alert alert-primary" role="alert">
+                    @publicaciones.Etiqueta.Nombre
+                </div>
+            }
             <h3>@publicaciones.Titulo</h3>
         </div>
         <div class="autor">
@@ -16,8 +26,119 @@
             <img src="@imgUrl"/>
         </div>
         <div class="contenido">
-            <h5>@prueba</h5>
+            <h5>@publicaciones.Contenido</h5>
+            <div>
+                <h6>Valoracion promedio:</h6><h6 style="color:yellow; font-weight:bold;">@CalificacionAverage estrellas</h6>
+            </div>
         </div>
+        <div class="p-2 col-9">
+            <button class="btn btn-primary" @onclick="Comentar">Comentar</button>
+            <button @onclick="Calificar" class="btn btn-primary">Calificar</button>
+        </div>
+        <div class="card-group">
+                <h4>Comentarios</h4>
+        </div>
+            @if(comentarios.Count > 0)
+            {
+                @foreach (var item in comentarios)
+                {
+                    <div class="comentario">
+                        <h5>@item.Autor - @item.Fecha</h5>
+                        <br />
+                        <label>@item.Contenido</label>
+                    </div>
+                    <br />
+                    <br />
+                }
+            }
+            else
+            {
+                <label>No hay comentarios...</label>
+            }
+        
+
+        @if (ModalComentar)
+        {
+            <div class="modal show d-block" id="roles" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="lbl">Crear Comentario</h5>
+                            <button type="button" class="close" @onclick="OcultarComentar"
+                                    data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row align-items-center">
+                                <div class="col" style="margin-bottom:2rem;">
+                                    <div class="form-group">
+                                        <label>Autor</label>
+                                        <div class="input-group">
+                                            <InputText class="form-control col-4" @bind-Value="comentario.Autor" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Contenido</label>
+                                <div class="input-group">
+                                    <InputText class="form-control col-4" @bind-Value="comentario.Contenido" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" @onclick="GuardarComentario" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-secondary"
+                                    @onclick="OcultarComentar" data-dismiss="modal">
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (ModalCalificar)
+        {
+            <div class="modal show d-block" id="roles" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="lbl">Califica el post</h5>
+                            <button type="button" class="close" @onclick="OcultarCalificar"
+                                    data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">X</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-row align-items-center">
+                                <div class="col" style="margin-bottom:2rem;">
+                                    <div class="form-group">
+                                        <label>Valoracion</label>
+                                        <div class="input-group">
+                                            <InputSelect @bind-Value="calificacion.Valoracion" class="form-control" > 
+                                                <option value="1">1 estrella</option>
+                                                <option value="2">2 estrellas</option>
+                                                <option value="3">3 estrella</option>
+                                                <option value="4">4 estrellas</option>
+                                                <option value="5">5 estrellas</option>
+                                            </InputSelect>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" @onclick="GuardarCalificacion" class="btn btn-primary">Guardar</button>
+                            <button type="button" class="btn btn-secondary"
+                                    @onclick="OcultarCalificar" data-dismiss="modal">
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 </div>
 
@@ -26,13 +147,58 @@
     public int parametro { get; set; }
     public Publicaciones publicaciones { get; set; } = new();
     public string imgUrl { get; set; } = string.Empty;
-    string prueba = $"It is a good platform to learn programming. It is an educational website. Prepare for the R of product based companies like Microsoft, Amazon, Adobe etc with a free online placement preparation course. The course focuses on various MCQ's & Codingl";
+    private bool ModalComentar = false, ModalCalificar = false;
+    public Comentarios comentario { get; set; } = new();
+    public CalificacionPublicacion calificacion { get; set; } = new();
+    public List<Comentarios> comentarios { get; set; } = new();
+    public decimal CalificacionAverage = 0;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         if (parametro > 0)
         {
+            await Buscar(parametro);
+        }
+    }
+    private async Task Comentar()
+    {
+        ModalComentar = true;
+    }
+
+    void OcultarComentar()
+    {
+        ModalComentar = false;
+    }
+    private async Task Calificar()
+    {
+        ModalCalificar = true;
+    }
+
+    void OcultarCalificar()
+    {
+        ModalCalificar = false;
+    }
+
+    private async Task GuardarComentario()
+    {
+        comentario.IdPublicacion = publicaciones.IdPublicacion;
+        var estado = await comentarioService.Insertar(comentario);
+        if (estado)
+        {
+            ModalComentar = false;
+            await Buscar(parametro);
+        }
+    }
+
+
+    private async Task GuardarCalificacion()
+    {
+        calificacion.IdPublicacion = publicaciones.IdPublicacion;
+        var estado = await calificacionService.Insertar(calificacion);
+        if (estado)
+        {
+            ModalCalificar = false;
             await Buscar(parametro);
         }
     }
@@ -46,6 +212,8 @@
             {
                 this.publicaciones = encontrado;
                 await DesconvertirImagen(publicaciones.Audiovisual);
+                comentarios = await comentarioService.GetListAsync(x => x.IdPublicacion == publicaciones.IdPublicacion);
+                CalificacionAverage = await calificacionService.Calculo(publicaciones.IdPublicacion);
             }
         }
     }

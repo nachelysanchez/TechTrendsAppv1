@@ -2,102 +2,123 @@
 @page "/rPublicaciones/{parametro:int}"
 @using TechTrendsAppv1.BLL.EstadosService
 @using TechTrendsAppv1.BLL.EtiquetasService
+@using TechTrendsAppv1.BLL.PlantillasService
+@using TechTrendsAppv1.BLL.RolesServices
 @using TechTrendsAppv1.Modelos
 @using TechTrendsAppv1.BLL.PublicacionesServices
 @inject IPublicacionesService publicacionService
+@inject IPlantillasService plantillaService
 @inject IEtiquetasService etiquetaService
+@inject IUsuariosService usuarioService
 @inject IEstadosService estadosService
+@inject IRolesService rolesService
 @inject IToastService toast
 @rendermode InteractiveServer
 
-<EditForm Model="publicaciones" OnValidSubmit="Guardar">
-    <div class="card">
-        <div class="card-header">
-            <h3>Registrar publicaci&oacute;n</h3>
-        </div>
-        <div class="card-body">
-            <form>
-                <div class="form-row align-items-center">
-                    <div class="col" style="margin-bottom:2rem;">
-                        <div class="form-group">
-                            <label>Id Publicaci&oacute;n</label>
-                            <div class="input-group">
-                                <InputNumber @bind-Value="publicaciones.IdPublicacion" class="form-control col-4" />
+@if (tienePermiso)
+{
+    
+    <EditForm Model="publicaciones" OnValidSubmit="Guardar">
+        <div class="card">
+            <div class="card-header">
+                <h3>Registrar publicaci&oacute;n</h3>
+            </div>
+            <div class="card-body">
+                <form>
+                    <div class="form-row align-items-center">
+                        <div class="col" style="margin-bottom:2rem;">
+                            <div class="form-group">
+                                <label>Id Publicaci&oacute;n</label>
+                                <div class="input-group">
+                                    <InputNumber @bind-Value="publicaciones.IdPublicacion" class="form-control col-4" />
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-6">
+                        <div class="row">
+                            <div class="col-6">
 
-                            <label>Etiqueta</label>
-                            <InputSelect class="form-control col-4" id="etiquetas" @bind-Value="publicaciones.IdEtiqueta">
-                                @foreach (var item in etiquetas)
-                                {
-                                    <option value="@item.IdEtiqueta">@item.Nombre</option>
-                                }
-                            </InputSelect>
+                                <label>Etiqueta</label>
+                                <InputSelect class="form-control col-4" id="etiquetas" @bind-Value="publicaciones.IdEtiqueta">
+                                    @foreach (var item in etiquetas)
+                                    {
+                                        <option value="@item.IdEtiqueta">@item.Nombre</option>
+                                    }
+                                </InputSelect>
                         
+                            </div>
+                            <div class="col-6">
+                                <label>Estado</label>
+                                <InputSelect class="form-control col-4" id="estados" @bind-Value="publicaciones.IdEstado">
+                                    @foreach (var item in estados)
+                                    {
+                                        <option value="@item.IdEstado">@item.Nombre</option>
+                                    }
+                                </InputSelect>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <label>Estado</label>
-                            <InputSelect class="form-control col-4" id="estados" @bind-Value="publicaciones.IdEstado">
-                                @foreach (var item in estados)
-                                {
-                                    <option value="@item.IdEstado">@item.Nombre</option>
-                                }
-                            </InputSelect>
+                        <div class="form-group">
+                            <label>T&iacute;tulo</label>
+                            <InputText class="form-control" @bind-Value="publicaciones.Titulo" />
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label>T&iacute;tulo</label>
-                        <InputText class="form-control" @bind-Value="publicaciones.Titulo" />
-                    </div>
-                    <div class="form-group">
-                        <label>Autor</label>
-                        <InputText class="form-control" @bind-Value="publicaciones.Autor" />
-                    </div>
-                    <div class="form-group">
-                        <label>Contenido</label>
-                        <textarea class="form-control" cols="40" rows="8" @bind="publicaciones.Contenido" />
-                    </div>
-                    <div class="form-group">
-                        <InputCheckbox class="form-check" @bind-Value="publicaciones.Visibilidad" />
-                        Visible para el p&uacute;blico
-                    </div>
+                        <div class="form-group">
+                            <label>Autor</label>
+                            <InputText class="form-control" @bind-Value="publicaciones.Autor" />
+                        </div>
+                        <div class="form-group">
+                            <label>Contenido</label>
+                            <textarea class="form-control" cols="40" rows="8" @bind="publicaciones.Contenido" />
+                        </div>
+                        <div class="form-group">
+                            <InputCheckbox class="form-check" @bind-Value="publicaciones.Visibilidad" />
+                            Visible para el p&uacute;blico
+                        </div>
 
-                    <div class="form-group" style="margin-top:2rem;">
-                        <label>Imagen</label>
-                        <InputFile class="file-input" OnChange="(e) => {OnInputFileChange(e);}" />
+                        <div class="form-group" style="margin-top:2rem;">
+                            <label>Imagen</label>
+                            <InputFile class="file-input" OnChange="(e) => {OnInputFileChange(e);}" />
+                        </div>
+                        <div class="row">
+                            <img style="height:100px; width:100px" src="@imgUrl" />
+                        </div>
                     </div>
-                    <div class="row">
-                        <img style="height:100px; width:100px" src="@imgUrl" />
-                    </div>
+                </form>
+            </div>
+            <div class="card-footer">
+                <div class="form-group text-center" display: inline-block>
+                    <button @onclick="Nuevo" type="button" class="btn btn-lg btn-primary">Nuevo</button>
+                    <button type="submit" class="btn btn-lg btn-success">Guardar</button>
+                    <button @onclick="Eliminar" type="button" class="btn btn-lg btn-danger">Eliminar</button>
+                    <button @onclick="GuardarPlantilla" type="button" class="btn btn-lg btn-light">Guardar como plantilla</button>
                 </div>
-            </form>
-        </div>
-        <div class="card-footer">
-            <div class="form-group text-center" display: inline-block>
-                <button @onclick="Nuevo" type="button" class="btn btn-lg btn-primary">Nuevo</button>
-                <button type="submit" class="btn btn-lg btn-success">Guardar</button>
-                <button type="button" class="btn btn-lg btn-danger">Eliminar</button>
-                <button type="button" class="btn btn-lg btn-light">Guardar como plantilla</button>
             </div>
         </div>
-    </div>
-</EditForm>
+    </EditForm>
+}
+else
+{
+    <h3>@mensaje</h3>
+}
+
 
 @code {
     [Parameter]
     public int parametro { get; set; }
     public Publicaciones publicaciones { get; set; } = new();
+    public Plantillas plantilla { get; set; } = new();
     public List<Etiquetas> etiquetas { get; set; } = new List<Etiquetas>();
     public List<Estados> estados { get; set; } = new List<Estados>();
     public string imgUrl { get; set; } = string.Empty;
+    public Usuarios Usuario { get; set; }
+    public Roles roles { get; set; } = new();
+    private bool tienePermiso = true;
+    private string mensaje = "NO DEBES DE ESTAR AQUI";
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        //Usuario = await usuarioService.GetUsuarioLogueado();
+        //roles = await rolesService.GetRolAsync(Usuario.IdRol);
         etiquetas = await etiquetaService.GetEtiquetas();
         estados = await estadosService.GetEstados();
         if (parametro > 0)
@@ -107,6 +128,18 @@
         else
         {
             await Nuevo();
+        }
+
+    }
+
+    private void VerificarPermiso()
+    {
+        foreach (var item in roles.Permisos)
+        {
+            if (item.Permiso.Nombre == "crearPublicaciones" || item.Permiso.Nombre == "editaPublicaciones" || item.Permiso.Nombre == "eliminaPublicaciones")
+            {
+                tienePermiso = true;
+            }
         }
     }
     private async Task Buscar(int id)
@@ -145,14 +178,13 @@
     private async Task Nuevo()
     {
         publicaciones = new Publicaciones();
+        plantilla = new Plantillas();
         imgUrl = string.Empty;
     }
 
 
     private async Task Guardar()
     {
-        publicaciones.IdEstado = 1;
-        publicaciones.IdEtiqueta = 1;
         var guardado = await publicacionService.Guardar(publicaciones);
         if (guardado)
         {
@@ -162,6 +194,40 @@
         else
         {
             toast.ShowWarning("La publicacion no se guardo");
+        }
+    }
+    private async Task Eliminar()
+    {
+        var guardado = await publicacionService.Eliminar(publicaciones);
+        if (guardado)
+        {
+            await Nuevo();
+            toast.ShowInfo("La publicacion se elimino correctamente");
+        }
+        else
+        {
+            toast.ShowWarning("La publicacion no se elimino");
+        }
+    }
+
+    private async Task GuardarPlantilla()
+    {
+        plantilla = new Plantillas
+        {
+            Titulo = publicaciones.Titulo,
+            Fecha = DateTime.Now,
+            Contenido = publicaciones.Contenido,
+            Descripcion = publicaciones.Autor
+        };
+        var guardado = await plantillaService.Guardar(plantilla);
+        if (guardado)
+        {
+            await Nuevo();
+            toast.ShowInfo("La plantilla se guardo correctamente");
+        }
+        else
+        {
+            toast.ShowWarning("La plantilla no se guardo");
         }
     }
 }

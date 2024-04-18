@@ -35,7 +35,7 @@
     public List<Carta> vistas { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
-        lista = await publicacionService.GetPublicaciones();
+        lista = await publicacionService.GetPublicacionesPublicada();
         foreach (var item in lista)
         {
             vistas.Add(new Carta

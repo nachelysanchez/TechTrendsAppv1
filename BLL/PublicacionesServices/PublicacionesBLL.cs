@@ -15,6 +15,22 @@ namespace TechTrendsAppv1.BLL.PublicacionesServices
             this.contexto = _contexto;
         }
 
+        public async Task<bool> Eliminar(Publicaciones publicacion)
+        {
+            bool paso = false;
+            try
+            {
+                contexto.Publicaciones.Remove(publicacion);
+                paso = await contexto.SaveChangesAsync() > 0;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return paso;
+        }
+
         public bool Existe(int idPublicacion)
         {
             bool encontrado = false;
@@ -96,6 +112,26 @@ namespace TechTrendsAppv1.BLL.PublicacionesServices
                 throw;
             }
             return lista;
+        }
+
+        public async Task<List<Publicaciones>> GetPublicacionesPublicada()
+        {
+            List<Publicaciones> publicacion = new List<Publicaciones>();
+            try
+            {
+                publicacion = await contexto.Publicaciones
+                    .Where(x => x.IdEstado == 1)
+                    .Include(x => x.Etiqueta)
+                    .Include(x => x.Estado)
+                    .AsNoTracking()
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return publicacion;
         }
 
         public async Task<bool> Guardar(Publicaciones publicacion)

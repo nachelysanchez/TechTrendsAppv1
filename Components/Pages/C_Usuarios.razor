@@ -138,7 +138,7 @@
     {
         if(usuarioSeleccionado.Rol != null)
         {
-            usuarioSeleccionado.IdRol = usuarioSeleccionado.Rol.IdRol;
+            usuarioSeleccionado.IdRol = usuarioSeleccionado.IdRol;
             var estado = await usuarioService.ModificarUsuario(usuarioSeleccionado);
             await Buscar();
             if (estado)

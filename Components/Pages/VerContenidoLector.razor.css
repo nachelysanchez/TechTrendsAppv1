@@ -33,5 +33,24 @@
 
 .contenido{
     margin-top:2rem;
-    border:solid;
+}
+
+.comentario {
+    border: solid;
+    border-color: gray;
+}
+
+.comentario h5 {
+    margin-bottom: 1rem;
+    font-style: italic;
+}
+
+.comentario label {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.card-group h4 {
+    font-weight: bold;
+    color: rgba(4, 35, 103, 0.8);
 }

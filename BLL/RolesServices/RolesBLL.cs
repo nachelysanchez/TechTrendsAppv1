@@ -71,7 +71,6 @@ namespace TechTrendsAppv1.BLL.Roles
                 rol = await contexto.Roles.Where(x => x.IdRol == idRol)
                     .Include(x => x.Permisos)
                     .ThenInclude(x => x.Permiso)
-                    .AsNoTracking()
                     .FirstAsync();
             }
             catch (Exception)

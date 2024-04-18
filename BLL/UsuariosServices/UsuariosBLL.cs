@@ -123,6 +123,7 @@ namespace TechTrendsAppv1.BLL.UsuariosServices
             bool paso = false;
             try
             {
+                usuario.IdRol = 4;
                 await contexto.Usuarios.AddAsync(usuario);
                 paso = await contexto.SaveChangesAsync() > 0;
             }
